@@ -14,6 +14,8 @@ public class ColumnKanbanDTO {
     private String columnTitle;
     private List<TaskDTO> taskDTOList;
 
+    private String columnColor;
+
     public List<TaskDTO> getTaskList() {
         return taskDTOList;
     }

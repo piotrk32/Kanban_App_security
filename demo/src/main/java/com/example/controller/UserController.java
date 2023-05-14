@@ -5,6 +5,7 @@ import com.example.model.UserDTO;
 import com.example.model.Users;
 import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,6 +88,18 @@ public class UserController {
         userService.deleteUserTask(userId, taskId);
         return ResponseEntity.noContent().build();
     }
+
+//    @PutMapping("/{userId}/taskLimit")
+//    public ResponseEntity<?> setTaskLimit(@PathVariable Long userId, @RequestParam int limit) {
+//        try {
+//            userService.setTaskLimit(userId, limit);
+//            return ResponseEntity.ok("Task limit set successfully.");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to set task limit.");
+//        }
+//    }
+
+
 
 
 

@@ -3,6 +3,7 @@ package com.example.service;
 import com.example.model.TaskDTO;
 import com.example.model.UserDTO;
 import com.example.model.Users;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,4 +30,11 @@ public interface UserService {
     void deleteUserTask(Long userId, Long taskId);
 
     Users saveUser(Users user);
+
+    @Transactional
+    void setTaskLimit(Long userId, int limit);
+
+
+
+//    void setTaskLimit(Long userId, int limit);
 }

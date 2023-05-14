@@ -39,6 +39,11 @@ public class Users implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    //tocheck
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private LimitTask limit;
+
     @JsonIgnore
     @JsonManagedReference
     @ToString.Exclude

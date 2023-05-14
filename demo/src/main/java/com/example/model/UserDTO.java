@@ -20,4 +20,6 @@ public class UserDTO {
     private List<Long> taskIds;
     private Long kanbanId;
 
+    private Integer taskLimit;
+
 }

@@ -33,6 +33,9 @@ public class ColumnKanban {
     @Column(name = "column_title", unique = true)
     private String columnTitle;
 
+    @Column(name = "color_column", nullable = true)
+    private String colorColumn;
+
     @JsonIgnore
     @JsonManagedReference
     @ToString.Exclude

@@ -59,6 +59,7 @@ public class UserServiceImplementation implements UserService {
             users.setFirstName(userDTO.getFirstName());
             users.setLastName(userDTO.getLastName());
             users.setPassword(userDTO.getPassword());
+//            users.setTaskLimit(userDTO.getTaskLimit());
             // Set other properties from UserDTO to User
             return userRepository.save(users);
         } else {
@@ -85,11 +86,19 @@ public class UserServiceImplementation implements UserService {
     public TaskDTO addUserTask(Long userId, TaskDTO taskDTO) {
         Users users = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        // Sprawdzenie, czy ilość zadań użytkownika przekracza limit
+//        if (users.getTasks().size() >= users.getTaskLimit()) {
+//            // Jeśli limit przekroczony, zmiana koloru kolumny na czerwony
+//            taskDTO.setColor("red");
+//        }
+
         Task task = convertDTOToTask(taskDTO);
         task.setUsers(users);
         taskRepository.save(task);
         return taskDTO;
     }
+
 
     @Override
     @Transactional
@@ -104,6 +113,13 @@ public class UserServiceImplementation implements UserService {
             task.setColor(taskDTO.getColor());
             task.setStatus(taskDTO.getStatus());
             taskRepository.save(task);
+
+//            if (users.getTasks().size() > users.getTaskLimit()) {
+//                // Jeśli limit przekroczony, zmiana koloru kolumny na czerwony
+//                ColumnKanban column = task.getColumnKanban();
+//                column.setColorColumn("red");
+//                columnKanbanRepository.save(column);
+//            }
         } else {
             throw new RuntimeException("Task not assigned to user with id: " + userId);
         }
@@ -119,9 +135,31 @@ public class UserServiceImplementation implements UserService {
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskId));
         if (task.getUsers().getId().equals(userId)) {
             taskRepository.delete(task);
+//            if (users.getTasks().size() <= users.getTaskLimit()) {
+//                // Jeśli ilość zadań wróciła poniżej lub równa limitowi, przywrócenie koloru kolumny
+//                ColumnKanban column = task.getColumnKanban();
+//                column.setColumnTitle("default");
+//                columnKanbanRepository.save(column);
+//            }
         } else {
             throw new RuntimeException("Task not assigned to user with id: " + userId);
         }
+    }
+
+    @Override
+    @Transactional
+    public void setTaskLimit(Long userId, int limit) {
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+
+        LimitTask userLimit = user.getLimit();
+        if (userLimit == null) {
+            userLimit = new LimitTask();
+        }
+        userLimit.setTaskLimit(limit);
+        user.setLimit(userLimit);
+
+        userRepository.save(user);
     }
 
 
@@ -137,6 +175,7 @@ public class UserServiceImplementation implements UserService {
         users.setLastName(userDTO.getLastName());
         users.setPassword(userDTO.getPassword());
         users.setId(userDTO.getId());
+//        users.setTaskLimit(userDTO.getTaskLimit());
         List<Task> l = new ArrayList<>();
         users.setTasks(l);
         return users;
